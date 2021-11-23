@@ -84,9 +84,6 @@ public class simulatedAnnealing{
         int a = CurrentSolution[randomChoice];
         int b = CurrentSolution[randomChoice + 1];
 
-        CurrentSolution[randomChoice] = b;
-        CurrentSolution[randomChoice + 1] = a;
-
         outputSolution(CurrentSolution);
 
         // Pre-Change
@@ -102,19 +99,17 @@ public class simulatedAnnealing{
         // If B won against A: [B][A] > 0, and value  would not have been counted
                           // : [A][B] = 0
 
-        //int changeCost = matrixGraph[b - 1][a - 1] + matrixGraph[a - 1][b - 1];
+
 
         // Update to Potential Solution Cost
-        int changeCost = KemenyScore(CurrentSolution) - cost;
+        int changeCost = matrixGraph[b - 1][a - 1] - matrixGraph[a - 1][b - 1];
         cost = cost + changeCost;
-
-
 
         if(changeCost <= 0){
           System.out.println("Better Solution found, changeCost " + changeCost);
           // Update Current Solution
-          // CurrentSolution[randomChoice] = b;
-          // CurrentSolution[randomChoice + 1] = a;
+          CurrentSolution[randomChoice] = b;
+          CurrentSolution[randomChoice + 1] = a;
           if(cost <= bestCost){
             for(int j =0; j < numberOfPlayers; j++){
               // Deep Copy
@@ -132,8 +127,8 @@ public class simulatedAnnealing{
             System.out.println("Prob");
           } else {
             // Resetting to previous loop starting values
-            CurrentSolution[randomChoice] = a;
-            CurrentSolution[randomChoice + 1] = b;
+            // Change to cost reversed
+            // CurrentSolution has not been changed from previous loop
             cost = cost - changeCost;
             System.out.println("Trigger Reset");
           }
@@ -145,7 +140,6 @@ public class simulatedAnnealing{
         }
       }
 
-      outputSolution(BestSolution);
       displayResults(BestSolution);
 
     }
@@ -155,6 +149,9 @@ public class simulatedAnnealing{
     for(int i =0; i< numberOfPlayers; i++){
       System.out.println(i+1 + "   | " + refPlayer[solution[i] -1 ][1] +", "+ solution[i]);
     }
+
+    System.out.println("Best Cost: " + bestCost);
+
   }
 
   public int chooseRandomNumber(int max, int min){
