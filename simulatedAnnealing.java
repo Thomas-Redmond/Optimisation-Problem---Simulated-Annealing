@@ -7,9 +7,13 @@ import java.lang.Math;
 
 public class simulatedAnnealing{
   int numberOfPlayers;
+  int bestCost;
 
-  int[] initSol;
-  int[] currentSol;
+  int[] BestSolution;
+  int[] InitialSolution;
+  int[] CurrentSolution;
+  int[] PotentialSolution;
+
   int[][] matrixGraph;
   String[][] refPlayer;
 
@@ -40,92 +44,142 @@ public class simulatedAnnealing{
   }
 
   public void algorithm(){
-    // construct initial solution x_0 (initSol)
-    // set current solution to = init solution
+    // Perform Simulated Annealing Algorithm
 
-    initSol = new int[numberOfPlayers];
-    currentSol = new int[numberOfPlayers];
+    // Declare arrays to be used
+    BestSolution = new int[numberOfPlayers];
+    InitialSolution = new int[numberOfPlayers];
+    CurrentSolution = new int[numberOfPlayers];
+    PotentialSolution = new int[numberOfPlayers];
+
+    // Populate Initial, Current, and Best Arrays using order supplied in external doc
+    // Using deep-copy approach to retain independance when modifying
     for(int i = 0; i < numberOfPlayers; i++){
       int playerID = Integer.parseInt(refPlayer[i][0]);
 
-      initSol[i] = playerID;
-      currentSol[i] = playerID;
+      BestSolution[i] = playerID;
+      InitialSolution[i] = playerID;
+      CurrentSolution[i] = playerID;
+      PotentialSolution[i] = playerID;
     }
 
-    double temperature = 100;   // Set init Temp
-    double tempLen = 5;          // Set Temperature Length
-    double coolingRatio = 0.5; // Cooling Rate
-    int non_num_improve = 4;
-    boolean stopNowCriteria = false;
-    //System.out.println(currentSol.length);
-    int cost = KemenyScore(currentSol);
+    // Declare Starting Variables
+    double temperature = 2;       // Set initial Temperature
+    double temperatureLength = 1;   // Set Temperature Length
+    double coolingRatio = 0.99999;  // Cooling Rate
 
+    int non_num_improve = 1;        // best solution not improved in x iterations, end program
     int iterationsSinceLastChange = 0;
+
+    boolean stopNowCriteria = false;// should algorithm be terminated
+
+    // Get Initial Solution cost
+    int cost = KemenyScore(InitialSolution);
 
     while(stopNowCriteria == false){
 
-      for(int i = 1; i <= tempLen; i++){
-
+      for(int i = 1; i <= temperatureLength; i++){
+        System.out.println("New Iteration");
         iterationsSinceLastChange++;
-        // randomly generate a neighbouring solution
-        // two change neighbour
-        int firstChoice = chooseRandomNumber(numberOfPlayers, 0);
-        int secondChoice = getDistinctRandom(firstChoice);
-        int[] nowSol = new int[numberOfPlayers];
 
+        // Select a random gap between two objects
+        // Gap ie 1, 2, 3 (has 2 gaps): Gap 0 being comma between 1 and 2
+        // this instance 1 and 2 would be switched
+        int randomChoice = chooseRandomNumber(numberOfPlayers - 1, 0);
+
+        // Select values either side of that gap
+        // These will be swapped
+        int a = CurrentSolution[randomChoice];
+        int b = CurrentSolution[randomChoice + 1];
+
+        // Pre-Change
+        // If A won against B: [A][B] > 0, but value would not be counted
+                          // : [B][A] = 0
+        // If B won against A: [B][A] > 0, and value would have been counted
+                          // : [A][B] = 0
+                          // Hence Minus [B][A]
+
+        // Post Change
+        // If A won against B: [A][B] > 0, value would be counted
+                          // : [B][A] = 0
+        // If B won against A: [B][A] > 0, and value  would not have been counted
+                          // : [A][B] = 0
+
+        int changeCost = matrixGraph[b][a] + matrixGraph[a][b];
+
+        // Populate New Solution
         for(int j = 0; j < numberOfPlayers; j++){
-          nowSol[j] = currentSol[j];
+          PotentialSolution[j] = CurrentSolution[j];
         }
+        PotentialSolution[randomChoice] = b;
+        PotentialSolution[randomChoice + 1] = a;
 
-          nowSol[firstChoice] = currentSol[secondChoice];
-          nowSol[secondChoice] = currentSol[firstChoice];
-          // two change neighbour to currentSol is nowSol
+        // Update to Potential Solution Cost
+        cost += changeCost;
 
-          //System.out.println(KemenyScore(nowSol) +" "+ cost);
-          int changeCost = KemenyScore(nowSol) - cost;
-          if(changeCost <= 0){
-            currentSol = nowSol;
+        if(changeCost <= 0){
+          // Update Current Solution
+          CurrentSolution[randomChoice] = b;
+          CurrentSolution[randomChoice + 1] = a;
+          if(cost < bestCost){
+            for(int j =0; j < numberOfPlayers; j++){
+              // Deep Copy
+              BestSolution[j] = CurrentSolution[j];
+            }
             iterationsSinceLastChange = -1;
           } else{
-              double q = Math.random();
-              double prob = Math.exp(-changeCost / temperature);
-              //System.out.println("Probability of Change: " + prob);
-              if(q < prob){
-                currentSol = nowSol;
-                iterationsSinceLastChange = -1;
-                }
-              }
-
-            temperature = coolingRatio * temperature;
-            cost = cost + changeCost;
-
-            if(iterationsSinceLastChange == non_num_improve){
-              System.out.println("Exiting with solution " + cost);
-              stopNowCriteria = true;
-              break;
+            double q = Math.random();
+            double prob = Math.exp(-changeCost / temperature);
+            if(q < prob){
+              CurrentSolution[randomChoice] = b;
+              CurrentSolution[randomChoice + 1] = a;
             }
           }
-        }
 
-        displayResults(currentSol);
+          temperature = coolingRatio * temperature;
+
+        }
+        /*
+
+        int changeCost = KemenyScore(PotentialSolution) - cost;
+        System.out.println("New Cost: " + changeCost);
+        if(changeCost <= 0){
+          System.out.println("New Cost as change is -ve");
+          CurrentSolution = PotentialSolution;
+          if(cost - bestCost < 0){
+            BestSolution = PotentialSolution;
+            bestCost = cost;
+          }
+          iterationsSinceLastChange = -1;
+        } else{
+            double q = Math.random();
+            double prob = Math.exp(-changeCost / temperature);
+            System.out.println("Probability of Change: " + prob);
+            if(q < prob){
+              CurrentSolution = PotentialSolution;
+              iterationsSinceLastChange = -1;
+              }
+            }
+
+          cost = cost + changeCost;
+
+          if(iterationsSinceLastChange == non_num_improve){
+            System.out.println("Exiting with solution " + cost);
+            stopNowCriteria = true;
+            break;
+          }
+        }
+        temperature = coolingRatio * temperature;
       }
+      */
+      //displayResults(BestSolution);
+    }
 
   public void displayResults(int[] solution){
     System.out.println("Position | Player Name");
     for(int i =0; i< numberOfPlayers; i++){
       System.out.println(i+1 + "   | " + refPlayer[solution[i] -1 ][1]);
     }
-  }
-
-  public int getDistinctRandom(int firstChoice){
-    int secondChoice = chooseRandomNumber(numberOfPlayers, 0);
-    if(Math.abs(firstChoice - secondChoice) > 1){
-      return secondChoice;
-    } else {
-      getDistinctRandom(firstChoice);
-
-    }
-    return secondChoice;
   }
 
   public int chooseRandomNumber(int max, int min){
