@@ -1,0 +1,5 @@
+cd /d E:\Thomas\Documents\$UNIVERSITY\YEAR_3\CM3109_Comb_Opt\cm3109_simulated_annealing_coursework
+
+javac *.java
+
+java simulatedAnnealing Formula_One_1984.wmg

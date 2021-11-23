@@ -31,7 +31,6 @@ public class simulatedAnnealing{
     for(int i = 0; i < numberOfPlayers; i++){
       int z = numberOfPlayers - i - 1;
       int playerID = solution[z];
-      //System.out.println(solution[z]);
 
       int a = 0;
       while( a < z){
@@ -67,20 +66,14 @@ public class simulatedAnnealing{
     double temperatureLength = 1;   // Set Temperature Length
     double coolingRatio = 0.99999;  // Cooling Rate
 
-    int non_num_improve = 1;        // best solution not improved in x iterations, end program
-    int iterationsSinceLastChange = 0;
-
-    boolean stopNowCriteria = false;// should algorithm be terminated
-
     // Get Initial Solution cost
     int cost = KemenyScore(InitialSolution);
+    bestCost = cost;
 
-    while(stopNowCriteria == false){
+    // Replace with while loop
+    for(int x = 0; x < 100; x++){
 
       for(int i = 1; i <= temperatureLength; i++){
-        System.out.println("New Iteration");
-        iterationsSinceLastChange++;
-
         // Select a random gap between two objects
         // Gap ie 1, 2, 3 (has 2 gaps): Gap 0 being comma between 1 and 2
         // this instance 1 and 2 would be switched
@@ -90,6 +83,11 @@ public class simulatedAnnealing{
         // These will be swapped
         int a = CurrentSolution[randomChoice];
         int b = CurrentSolution[randomChoice + 1];
+
+        CurrentSolution[randomChoice] = b;
+        CurrentSolution[randomChoice + 1] = a;
+
+        outputSolution(CurrentSolution);
 
         // Pre-Change
         // If A won against B: [A][B] > 0, but value would not be counted
@@ -104,34 +102,48 @@ public class simulatedAnnealing{
         // If B won against A: [B][A] > 0, and value  would not have been counted
                           // : [A][B] = 0
 
-        int changeCost = matrixGraph[b][a] + matrixGraph[a][b];
+        //int changeCost = matrixGraph[b - 1][a - 1] + matrixGraph[a - 1][b - 1];
 
         // Update to Potential Solution Cost
-        cost += changeCost;
+        int changeCost = KemenyScore(CurrentSolution) - cost;
+        cost = cost + changeCost;
+
+
 
         if(changeCost <= 0){
+          System.out.println("Better Solution found, changeCost " + changeCost);
           // Update Current Solution
-          CurrentSolution[randomChoice] = b;
-          CurrentSolution[randomChoice + 1] = a;
-          if(cost < bestCost){
+          // CurrentSolution[randomChoice] = b;
+          // CurrentSolution[randomChoice + 1] = a;
+          if(cost <= bestCost){
             for(int j =0; j < numberOfPlayers; j++){
               // Deep Copy
               BestSolution[j] = CurrentSolution[j];
+              }
+            bestCost = cost;
+            System.out.println("Update bestCost to " + bestCost);
             }
-            iterationsSinceLastChange = -1;
-          } else{
-            double q = Math.random();
-            double prob = Math.exp(-changeCost / temperature);
-            if(q < prob){
-              CurrentSolution[randomChoice] = b;
-              CurrentSolution[randomChoice + 1] = a;
-            }
+      } else {
+          double q = Math.random();
+          double prob = Math.exp(-changeCost / temperature);
+          if(q < prob){
+            CurrentSolution[randomChoice] = b;
+            CurrentSolution[randomChoice + 1] = a;
+            System.out.println("Prob");
+          } else {
+            // Resetting to previous loop starting values
+            CurrentSolution[randomChoice] = a;
+            CurrentSolution[randomChoice + 1] = b;
+            cost = cost - changeCost;
+            System.out.println("Trigger Reset");
           }
-
-          temperature = coolingRatio * temperature;
+        }
+        System.out.println("Start with cost " + cost);
+        System.out.println(" ");
+        temperature = coolingRatio * temperature;
 
         }
-
+      }
     }
 
   public void displayResults(int[] solution){
@@ -153,6 +165,14 @@ public class simulatedAnnealing{
     } else{
       System.out.println("Missing file parameter");
     }
+  }
+
+  public void outputSolution(int[] CurrentSolution){
+    String output = "";
+    for(int y = 0; y < numberOfPlayers; y++){
+      output += CurrentSolution[y] + " ";
+    }
+    System.out.println(output);
   }
 }
 
