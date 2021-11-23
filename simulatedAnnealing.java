@@ -144,12 +144,16 @@ public class simulatedAnnealing{
 
         }
       }
+
+      outputSolution(BestSolution);
+      displayResults(BestSolution);
+
     }
 
   public void displayResults(int[] solution){
-    System.out.println("Position | Player Name");
+    System.out.println("Position | Player Name , Player ID");
     for(int i =0; i< numberOfPlayers; i++){
-      System.out.println(i+1 + "   | " + refPlayer[solution[i] -1 ][1]);
+      System.out.println(i+1 + "   | " + refPlayer[solution[i] -1 ][1] +", "+ solution[i]);
     }
   }
 
