@@ -141,6 +141,8 @@ public class simulatedAnnealing{
       }
 
       displayResults(BestSolution);
+      System.out.println("");
+      outputData(matrixGraph);
 
     }
 
@@ -174,6 +176,17 @@ public class simulatedAnnealing{
       output += CurrentSolution[y] + " ";
     }
     System.out.println(output);
+  }
+
+  public void outputData(int[][] data){
+    
+    for(int x =0; x < numberOfPlayers; x++){
+      String output = x+1 + "/   ";
+      for(int y = 0; y < numberOfPlayers; y++){
+        output += matrixGraph[x][y] + "   ";
+      }
+      System.out.println(output);
+    }
   }
 }
 

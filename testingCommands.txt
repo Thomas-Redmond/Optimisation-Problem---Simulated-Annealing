@@ -3,3 +3,5 @@ cd /d E:\Thomas\Documents\$UNIVERSITY\YEAR_3\CM3109_Comb_Opt\cm3109_simulated_an
 javac *.java
 
 java simulatedAnnealing Formula_One_1984.wmg
+
+Use variation of output current Solution to output entire graph
