@@ -60,7 +60,6 @@ public class simulatedAnnealing{
       BestSolution[i] = playerID;
       InitialSolution[i] = playerID;
       CurrentSolution[i] = playerID;
-      PotentialSolution[i] = playerID;
     }
 
     // Declare Starting Variables
@@ -107,13 +106,6 @@ public class simulatedAnnealing{
 
         int changeCost = matrixGraph[b][a] + matrixGraph[a][b];
 
-        // Populate New Solution
-        for(int j = 0; j < numberOfPlayers; j++){
-          PotentialSolution[j] = CurrentSolution[j];
-        }
-        PotentialSolution[randomChoice] = b;
-        PotentialSolution[randomChoice + 1] = a;
-
         // Update to Potential Solution Cost
         cost += changeCost;
 
@@ -139,40 +131,7 @@ public class simulatedAnnealing{
           temperature = coolingRatio * temperature;
 
         }
-        /*
 
-        int changeCost = KemenyScore(PotentialSolution) - cost;
-        System.out.println("New Cost: " + changeCost);
-        if(changeCost <= 0){
-          System.out.println("New Cost as change is -ve");
-          CurrentSolution = PotentialSolution;
-          if(cost - bestCost < 0){
-            BestSolution = PotentialSolution;
-            bestCost = cost;
-          }
-          iterationsSinceLastChange = -1;
-        } else{
-            double q = Math.random();
-            double prob = Math.exp(-changeCost / temperature);
-            System.out.println("Probability of Change: " + prob);
-            if(q < prob){
-              CurrentSolution = PotentialSolution;
-              iterationsSinceLastChange = -1;
-              }
-            }
-
-          cost = cost + changeCost;
-
-          if(iterationsSinceLastChange == non_num_improve){
-            System.out.println("Exiting with solution " + cost);
-            stopNowCriteria = true;
-            break;
-          }
-        }
-        temperature = coolingRatio * temperature;
-      }
-      */
-      //displayResults(BestSolution);
     }
 
   public void displayResults(int[] solution){
