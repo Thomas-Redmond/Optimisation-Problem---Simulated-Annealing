@@ -34,7 +34,8 @@ public class simulatedAnnealing{
 
       int a = 0;
       while( a < z){
-        cost += matrixGraph[playerID - 1][a];
+        int comparator = solution[a];
+        cost += matrixGraph[playerID - 1][comparator - 1];
         a++;
         }
       }
@@ -63,7 +64,7 @@ public class simulatedAnnealing{
 
     // Declare Starting Variables
     double temperature = 2;       // Set initial Temperature
-    double temperatureLength = 1;   // Set Temperature Length
+    double temperatureLength = 10;   // Set Temperature Length
     double coolingRatio = 0.99999;  // Cooling Rate
 
     // Get Initial Solution cost
@@ -102,7 +103,10 @@ public class simulatedAnnealing{
 
 
         // Update to Potential Solution Cost
-        int changeCost = matrixGraph[b - 1][a - 1] - matrixGraph[a - 1][b - 1];
+        //int changeCostK = matrixGraph[b - 1][a - 1] - matrixGraph[a - 1][b - 1];
+        int changeCost = KemenyScore(CurrentSolution) - cost;
+        //System.out.println("Change Cost Kemeny: " + changeCostK + " Starting value: " + cost + " KemenyScore " + KemenyScore(CurrentSolution));
+        //System.out.println("Change Cost f(): " + changeCost);
         cost = cost + changeCost;
 
         if(changeCost <= 0){
@@ -142,7 +146,7 @@ public class simulatedAnnealing{
 
       displayResults(BestSolution);
       System.out.println("");
-      outputData(matrixGraph);
+      //outputData(matrixGraph);
 
     }
 
@@ -179,7 +183,7 @@ public class simulatedAnnealing{
   }
 
   public void outputData(int[][] data){
-    
+
     for(int x =0; x < numberOfPlayers; x++){
       String output = x+1 + "/   ";
       for(int y = 0; y < numberOfPlayers; y++){
