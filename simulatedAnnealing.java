@@ -63,8 +63,8 @@ public class simulatedAnnealing{
     }
 
     // Declare Starting Variables
-    double temperature = 2;       // Set initial Temperature
-    double temperatureLength = 10;   // Set Temperature Length
+    double temperature = 1;       // Set initial Temperature
+    double temperatureLength = 1;   // Set Temperature Length
     double coolingRatio = 0.99999;  // Cooling Rate
 
     // Get Initial Solution cost
@@ -85,7 +85,7 @@ public class simulatedAnnealing{
         int a = CurrentSolution[randomChoice];
         int b = CurrentSolution[randomChoice + 1];
 
-        outputSolution(CurrentSolution);
+        //outputSolution(CurrentSolution);
 
         // Pre-Change
         // If A won against B: [A][B] > 0, but value would not be counted
@@ -139,6 +139,7 @@ public class simulatedAnnealing{
         }
         System.out.println("Start with cost " + cost);
         System.out.println(" ");
+
         temperature = coolingRatio * temperature;
 
         }
