@@ -18,15 +18,14 @@ class FileReader{
       File myFile = new File(filename);
       Scanner myReader = new Scanner(myFile);
 
+      int fileLength = 0;
       while(myReader.hasNextLine()){
+        fileLength++;
         data.add(myReader.nextLine());
       }
-
-      catch(FileNotFoundException e){
+    } catch(FileNotFoundException e){
         System.out.println("File not found " + filename);
       }
     }
 
   }
-
-}

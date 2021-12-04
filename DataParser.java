@@ -1,42 +1,48 @@
+import java.util.ArrayList;
+
 class DataParser{
   // Takes data from given FileReader class
   // Parses data according to rules gven in "How_to_read_tournament_data.pdf"
 
   int playerNum;
+  int[] initSol;
   String[][] listPlayerNames;
 
   wgMatrix matrix; // Points to weighted graph representing matrix class
 
 
-  public DataParser(String[] fileData){
+  public DataParser(ArrayList<String> fileData){
     // Takes data in String List
     // Grabs number of players and creates matrix accordingly
 
-    playerNum = Integer.ParseInt(fileData.[0]);
+    playerNum = Integer.parseInt(fileData.get(0));
     matrix = new wgMatrix(playerNum);
 
     parsePlayerNames(fileData);
 
     parseMatrix(fileData);
-    System.out.println("Matrix created");
 
   }
 
-  public void parsePlayerNames(String[] fileData){
+  public void parsePlayerNames(ArrayList<String> fileData){
     // Populate listPlayerNames using format [PlayerID]["Player Name"]
     listPlayerNames = new String[playerNum][2];
 
     for(int i = 1; i <= playerNum; i++){
       // Splits Each row into seperate Strings by commas
-      String[] tempArray = data.get(i).split(",");
+      String[] tempArray = fileData.get(i).split(",");
       listPlayerNames[i - 1][0] = tempArray[0];
-      listPlayerNames[i - 1][0] = tempArray[0];
+      listPlayerNames[i - 1][1] = tempArray[1];
+
+      // Load Initial solution
+      initSol[i - 1] = tempArray[0];
     }
   }
 
 
-  public void parseMatrix(String[] fileData){
+  public void parseMatrix(ArrayList<String> fileData){
     // Populate matrix variable
+    System.out.println("FileData size: " + fileData.size());
     for(int i = playerNum + 2; i < fileData.size(); i++){
       String[] Line = fileData.get(i).split(",");
 
@@ -51,6 +57,10 @@ class DataParser{
 
   public int getPlayerNum(){
     return playerNum;
+  }
+
+  public int[] getInitSol(){
+    return initSol;
   }
 
   public String[][] getListPlayerNames(){

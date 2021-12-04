@@ -1,4 +1,4 @@
-public class wgMatrix(){
+public class wgMatrix{
   // Weighted Graph representing Matrix
 
   int num;
@@ -28,6 +28,7 @@ public class wgMatrix(){
     }
 
     public int getValue(int winner, int loser){
+      // Get value by player ids
       return matrix[winner - 1][loser - 1];
     }
 }
