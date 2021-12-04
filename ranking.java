@@ -30,6 +30,10 @@ public class ranking{
     return sequence;
   }
 
+  public int getByPointer(int pointer){
+    return sequence[pointer];
+  }
+
   public void printSequence(){
     String output = "";
     for(int i = 0; i < num; i++){
