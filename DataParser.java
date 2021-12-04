@@ -16,6 +16,7 @@ class DataParser{
     // Grabs number of players and creates matrix accordingly
 
     playerNum = Integer.parseInt(fileData.get(0));
+    initSol = new int[playerNum];
     matrix = new wgMatrix(playerNum);
 
     parsePlayerNames(fileData);
@@ -35,14 +36,14 @@ class DataParser{
       listPlayerNames[i - 1][1] = tempArray[1];
 
       // Load Initial solution
-      initSol[i - 1] = tempArray[0];
+      initSol[i - 1] = Integer.parseInt(tempArray[0]);
     }
   }
 
 
   public void parseMatrix(ArrayList<String> fileData){
     // Populate matrix variable
-    System.out.println("FileData size: " + fileData.size());
+
     for(int i = playerNum + 2; i < fileData.size(); i++){
       String[] Line = fileData.get(i).split(",");
 

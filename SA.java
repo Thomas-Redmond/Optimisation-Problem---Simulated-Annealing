@@ -11,9 +11,10 @@ public class SA{
 
     matrix = fixesData.getMatrix();
 
-    int num = fixesData.getNumberOfPlayers();
+    int num = fixesData.getPlayerNum();
 
     ranking initialSolution = new ranking(num, fixesData.getInitSol());
+    initialSolution.printSequence();
 
   }
 
@@ -24,12 +25,7 @@ public class SA{
       System.out.println("Missing File Parameter");
     } else {
 
-      try{
-        SA solution = new SA(args[0]);
-
-      } catch (Exception e){
-        System.out.println(e);
-      }
+      SA solution = new SA(args[0]);
 
     }
 
