@@ -51,7 +51,7 @@ public class SA{
     double coolingRatio = 0.9999;
 
     // Stopping Criteria Variables
-    int no_num_improve = 40000 * temperatureLength;
+    int no_num_improve = 20000 * temperatureLength;
     int iterSinceLastImprove = 0;
     boolean runSA = true;
 
@@ -114,6 +114,8 @@ public class SA{
     System.out.println("Best cost found: " + bestCost);
     System.out.println("Total Iterations: " + totalIterations);
 
+    displayResults(bestSolution);
+
   }
 
   public int KemenyScore(ranking r){
@@ -141,7 +143,25 @@ public class SA{
     return kCost;
   }
 
+  public void displayResults(ranking solution){
+    String[][] playerNames = fixesData.getListPlayerNames();
+
+    System.out.println("Position | Player Name");
+
+
+    for(int i = 0; i < num; i++){
+      int playerID = solution.getByPointer(i);
+      String name = playerNames[playerID - 1][1];
+      System.out.println(i+1 + " | " + name);
+    }
+
+    System.out.println("Best Cost: " + bestCost);
+
+  }
+
+
   public static void main(String[] args){
+    long startTime = System.currentTimeMillis();
     // Test for filename given as parameter
     if(args.length < 1){
 
@@ -151,6 +171,8 @@ public class SA{
       SA solution = new SA(args[0]);
 
     }
+    long endTime = System.currentTimeMillis();
+    System.out.println("Duration: " + (endTime - startTime) + " milliseconds");
 
   }
 
