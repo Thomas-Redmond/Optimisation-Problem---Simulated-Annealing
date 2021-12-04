@@ -48,10 +48,10 @@ public class SA{
     // Declare Starting Variables
     double temperature = 10;
     int temperatureLength = 10;
-    double coolingRatio = 0.999;
+    double coolingRatio = 0.9999;
 
     // Stopping Criteria Variables
-    int no_num_improve = 4 * temperatureLength;
+    int no_num_improve = 40000 * temperatureLength;
     int iterSinceLastImprove = 0;
     boolean runSA = true;
 
