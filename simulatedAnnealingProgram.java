@@ -1,7 +1,7 @@
 import java.util.Random;
 import java.lang.Math;
 
-public class SA{
+public class simulatedAnnealingProgram{
   // Performs the Simulated Annealing Algorithm on a dataset passed as filename parameter
 
   // Algorithm in function Algorithm
@@ -20,7 +20,7 @@ public class SA{
   DataParser fixesData;
   wgMatrix matrix;
 
-  public SA(String filename){
+  public simulatedAnnealingProgram(String filename){
 
     reader = new FileReader(filename); // Read Data from file
     fixesData = new DataParser(reader.data); // Parse Read data according to rules given
@@ -177,7 +177,7 @@ public class SA{
       } else {
 
         // Pass filename
-        SA findSolution = new SA(args[0]);
+        simulatedAnnealingProgram findSolution = new simulatedAnnealingProgram(args[0]);
 
         findSolution.algorithm(10, 10, 0.9999, 25000); // temperature, temperature Length, cooling ratio, and no_num_improve value
 
