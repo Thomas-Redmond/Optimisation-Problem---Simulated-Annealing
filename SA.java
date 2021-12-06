@@ -2,6 +2,10 @@ import java.util.Random;
 import java.lang.Math;
 
 public class SA{
+  // Performs the Simulated Annealing Algorithm on a dataset passed as filename parameter
+
+  // Algorithm in function Algorithm
+
 
   int num;
   int cost;
@@ -34,8 +38,6 @@ public class SA{
     bestCost = KemenyScore(initialSolution);
     cost = bestCost;
 
-    algorithm();
-
   }
 
   public int chooseRandomNumber(int max, int min){
@@ -43,15 +45,18 @@ public class SA{
     return random.nextInt(max - min) + min;
   }
 
-  public void algorithm(){
+  /*
+
+  */
+  public void algorithm(double temp, int tempLen, double coolRat, int noNumImprove){
 
     // Declare Starting Variables
-    double temperature = 10;
-    int temperatureLength = 10;
-    double coolingRatio = 0.9999;
+    double temperature = temp;
+    int temperatureLength = tempLen;
+    double coolingRatio = coolRat;
 
     // Stopping Criteria Variables
-    int no_num_improve = 20000 * temperatureLength;
+    int no_num_improve = noNumImprove * temperatureLength;
     int iterSinceLastImprove = 0;
     boolean runSA = true;
 
@@ -69,9 +74,10 @@ public class SA{
 
         // Make current ranking from initalranking and swap two values
         ranking currentSolution = new ranking(num, initialSolution.getSequence());
-        currentSolution.swapValues(randomChoice);
+        int[] swappedValues = currentSolution.swapValues(randomChoice);
 
-        int changeCost = KemenyScore(currentSolution) - cost;
+        int changeCost = matrix.getValue(swappedValues[0], swappedValues[1]) - matrix.getValue(swappedValues[1], swappedValues[0]);
+
 
         if(changeCost <= 0){
 
@@ -111,14 +117,14 @@ public class SA{
     }
 
     // End of while loop
-    System.out.println("Best cost found: " + bestCost);
-    System.out.println("Total Iterations: " + totalIterations);
+    //System.out.println("Best cost found: " + bestCost);
+    //System.out.println("Total Iterations: " + totalIterations);
 
     displayResults(bestSolution);
-
   }
 
   public int KemenyScore(ranking r){
+    // Identify beginning Kemeny Score
 
     int kCost = 0;
 
@@ -144,6 +150,7 @@ public class SA{
   }
 
   public void displayResults(ranking solution){
+    // Ouput Results in table format
     String[][] playerNames = fixesData.getListPlayerNames();
 
     System.out.println("Position | Player Name");
@@ -161,22 +168,21 @@ public class SA{
 
 
   public static void main(String[] args){
-    long startTime = System.currentTimeMillis();
-    // Test for filename given as parameter
-    if(args.length < 1){
+    // Start Timer and begin SA
+      long startTime = System.currentTimeMillis();
+      // Test for filename given as parameter
+      if(args.length < 1){
 
-      System.out.println("Missing File Parameter");
-    } else {
+        System.out.println("Missing File Parameter");
+      } else {
 
-      SA solution = new SA(args[0]);
+        // Pass filename
+        SA findSolution = new SA(args[0]);
 
+        findSolution.algorithm(10, 10, 0.9999, 25000); // temperature, temperature Length, cooling ratio, and no_num_improve value
+
+      }
+      long endTime = System.currentTimeMillis();
+      System.out.println("Duration: " + (endTime - startTime) + " milliseconds");
     }
-    long endTime = System.currentTimeMillis();
-    System.out.println("Duration: " + (endTime - startTime) + " milliseconds");
-
-  }
-
-
-
-
 }

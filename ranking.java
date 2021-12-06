@@ -17,15 +17,18 @@ public class ranking{
     }
   }
 
-  public void swapValues(int choice){
+  public int[] swapValues(int choice){
     // 0 <= choice <= num - 1 as choice refers to the comma seperating two values
     int a = sequence[choice];
     int b = sequence[choice + 1];
 
     sequence[choice] = b;
     sequence[choice + 1] = a;
-  }
 
+    int[] values = {a, b};
+    return values;
+  }
+  
   public int[] getSequence(){
     return sequence;
   }
